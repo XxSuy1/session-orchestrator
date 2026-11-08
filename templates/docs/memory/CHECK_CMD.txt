@@ -1,0 +1,2 @@
+# 检查命令：只写一行（测试/类型检查/lint 的组合，PowerShell 语法）。留空则 Stop hook 跳过。
+# 例：npm test; if ($LASTEXITCODE -eq 0) { npx tsc --noEmit }
