@@ -27,10 +27,11 @@ description: 多会话总控工作流。用户说"按总控协议来""初始化�
 4. 总控按任务选择：子代理 `coder-light`(haiku) / `coder`(sonnet) / `coder-deep`(opus)，或需要用户参与时用子对话；并行编码一律 worktree，文件范围不重叠（跨线重叠先问用户）。派活前任务卡必须已存档，派活消息只让对方读卡；接活的一方动手前先写细计划 `<编号>.plan.md`。子对话可以再派子代理（子任务编号 `<编号>.1`），由它自己验收。
 5. 逐个验收：自己跑检查 + 看 diff；可派只读 `reviewer`。返工 ≤ 2 次。
 6. 编码全部合并后开**测试**（`tester` 或测试子对话）。通过后**合并到 main（一次只合一条线）**，更新 CHANGELOG、打 tag（从 `v0.0.1` 起，接着现有最大版本号）。
-7. 每次结束前过收尾清单；上下文快满时覆盖写本线 `HANDOFF.md`，请用户新开对话说"接手 <线名>"。
+7. 每次结束前过收尾清单；每次验收通过、每次合并后刷新本线 `HANDOFF.md`（不要等上下文快满：自动压缩后察觉不到）；要换总控时请用户新开对话说"接手 <线名>"。
 
 ## 关键约束（别忘）
 - 一个项目可以有多个总控，**同一时间一条线只有一个总控**。总控只改本线文件夹和总览里自己那一行；共用的 `DECISIONS.md`、`GOTCHAS.md`、`CHANGELOG.md` 只追加。
+- DECISIONS / GOTCHAS **只有总控写**，追加前先 Grep 同标签条目查冲突（跨线冲突问用户）；子会话把决策和坑写进回报的"值得记忆"，只读任务卡点名的条目。作废、已防护的条目和已完成的线，在合并到 main 时由持锁总控搬到 `ARCHIVE.md`。
 - 层级最多三层：总控 → 子对话 → 子代理。子代理不能再派子代理；子对话不再开子对话。谁派的活谁验收、谁收回报，总控不越级。
 - 子代理**不能向用户提问**：需要用户拍板的任务必须是子对话。
 - 子对话用 `start_session`：必传 `model`、`effort`、`cwd`、`prompt`、`name`；写代码的 `use_worktree: true`；子对话模型不得高于总控。
@@ -43,4 +44,4 @@ description: 多会话总控工作流。用户说"按总控协议来""初始化�
 - 跨会话记忆 = `docs/` 下的文件（不使用 claude-mem）。
 
 ## 来源
-规则依据 Claude Code 官方文档（subagents、best-practices、memory、agent-teams、worktrees、cross-session-messaging、hooks、permissions）整理；v4（2026-11-09 加"多总控与功能线"；v3 加"任务书存档"）。
+规则依据 Claude Code 官方文档（subagents、best-practices、memory、agent-teams、worktrees、cross-session-messaging、hooks、permissions）整理；v5（2026-11-09 加"记忆分层与清理"：决策/坑带编号、标签、状态，追加前查冲突，合并时归档；回报加"值得记忆"；任务卡只读点名条目；交接改为按事件刷新）；v4 加"多总控与功能线"；v3 加"任务书存档"。
